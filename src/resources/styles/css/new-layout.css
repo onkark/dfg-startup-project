@@ -10,9 +10,6 @@ body{
     margin: 0;
 }
 
-.mat-toolbar.mat-primary{
-    background-color: #B42025;
-}
 .mat-drawer-container,
 .artical-header,
 .artical-body{
@@ -343,8 +340,9 @@ h2.dfg-dialog-title{
     color:rgba(255,255,255,.8) !important;
    
 }
+
 .header-info-right{
-    font-family: roboto;
+    /* font-family: roboto; */
     font-weight: normal;
     display:contents !important;
     

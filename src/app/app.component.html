@@ -3,9 +3,9 @@
     <header>
         <app-header (toggle)="onToggle($event)" ></app-header>
     </header>
-    <div class="toolbar">
+    <!-- <div class="toolbar">
         <app-toolbar></app-toolbar>
-    </div>
+    </div> -->
     <mat-drawer-container class="site-content">
         <mat-drawer class="site-navbar-drawer" #sidenav [opened]="!!this.appConfigService.masterConfig" [mode]="mobileQuery.matches ? 'over' : 'side'">
             <nav class="site-navbar" fxFlex="1 6">

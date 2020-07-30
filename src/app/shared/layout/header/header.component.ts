@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 
-import { UIMessageService   } from '../../../app-communication/service/ui-message.service';
+import { UIMessageService } from '../../../app-communication/service/ui-message.service';
 
 
 @Component({
@@ -11,7 +11,12 @@ export class HeaderComponent implements OnInit {
 
   @Output() toggle = new EventEmitter<boolean>();
 
-  constructor(public uiMessageService: UIMessageService) { }
+  lastLoginTime: any;
+
+  constructor(public uiMessageService: UIMessageService) {
+    this.lastLoginTime = new Date().toLocaleString();
+  }
+
   ngOnInit() {
   }
 
