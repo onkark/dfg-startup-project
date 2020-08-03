@@ -1,11 +1,11 @@
-import { Injectable             } from '@angular/core';
-import { ActivatedRoute         } from '@angular/router';
-import { HttpClient             } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
-import { AppConfigService               } from './app-config.service';
+import { AppConfigService } from './app-config.service';
 
-import { Section, EnumFormConfigSource, FrameworkBootstrapService  } from 'dfg-dynamic-form';
-import { FormRow, sanitizeObjectForEnvironmentConfig               } from 'dfg-dynamic-form';
+import { Section, EnumFormConfigSource, FrameworkBootstrapService } from 'dfg-dynamic-form';
+import { FormRow, sanitizeObjectForEnvironmentConfig } from 'dfg-dynamic-form';
 
 
 import * as  localFormConfigData$ from '../../sample-config/section-config/local-form-mapping.config';
@@ -36,9 +36,11 @@ export class AppRuntimeInfoService {
         return this.routeSubSection ? this.routeSubSection : this.routeSection;
     }
 
+    private _manageAppSection: Section;
+    private _formDesignerSection: Section;
+
     routeSection: Section;
 
-    // subSectionName: string;
     routeSubSection: Section;
 
     isSubSectionLoaded: boolean;
@@ -84,7 +86,7 @@ export class AppRuntimeInfoService {
         let configSections = sectionConfig ? sectionConfig : this.masterConfig;
         for (const section of configSections) {
             if (sectionRoutePath === section.sectionRoutePath) {
-               return section;
+                return section;
             } else if (section.subSectionConfig) {
                 let retSection = this.getRouteSection(sectionRoutePath, section.subSectionConfig);
                 if (retSection) {
@@ -98,10 +100,10 @@ export class AppRuntimeInfoService {
     private getSectionConfig(section: Section) {
         // console.log(sectionType, section);
         if (section) {
-            if (section.formConfigSource ===  EnumFormConfigSource.LOCAL) {
+            if (section.formConfigSource === EnumFormConfigSource.LOCAL) {
 
                 section.formConfigData = localFormConfigData$.LocalFormConfigMapping[section.formConfigPath]
-                                            ?  localFormConfigData$.LocalFormConfigMapping[section.formConfigPath] : null;
+                    ? localFormConfigData$.LocalFormConfigMapping[section.formConfigPath] : null;
 
             }
         }
@@ -112,7 +114,25 @@ export class AppRuntimeInfoService {
     }
 
     toggleDesignerMode() {
-        this._masterConfig[0]['isDeleted'] = this._isProdMode;
-        this._masterConfig[1]['isDeleted'] = this._isProdMode;
+        if (!this._formDesignerSection || !this._manageAppSection) {
+
+            for (const section of this.masterConfig) {
+                if (section.sectionName === 'Manage App Section') {
+                    this._manageAppSection = section;
+                } else if (section.sectionName === 'Form Designer') {
+                    this._formDesignerSection = section;
+                }
+            }
+        }
+
+        this._manageAppSection.isDeleted = this._isProdMode;
+        this._formDesignerSection.isDeleted = this._isProdMode;
+
+        this._manageAppSection.isVisible = !this._isProdMode;
+        this._formDesignerSection.isVisible = !this._isProdMode;
+
+        console.log(this._manageAppSection, this._formDesignerSection);
+
     }
+
 }

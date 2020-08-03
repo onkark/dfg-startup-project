@@ -3,6 +3,8 @@ body{
     background-color:#E8E8E8;
     font-family: inherit;
     font-weight: normal;
+    height: 100%;
+    margin: 0;
 }
 .artical-header,
 .artical-body{

@@ -11,6 +11,7 @@ import { AppConfigService             } from './app-communication/service/app-co
 import { UIMessageService             } from './app-communication/service/ui-message.service';
 import { NotificationService, NOTIFICATION_TYPE          } from './shared/form-helpers/notification/notification.service';
 import { Section                      } from 'dfg-dynamic-form';
+import { AppRuntimeInfoService } from './app-communication/service/app-runtime-info.service';
 
 
 /**
@@ -42,10 +43,11 @@ export class AppComponent implements OnInit, OnDestroy {
   private _mobileQueryListener: () => void;
   mobileQuery: MediaQueryList;
 
-  constructor(public appConfigService: AppConfigService, public uiMessageService: UIMessageService,
-      private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private dialog: MatDialog,
-      private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher,
-      private notificationService: NotificationService) {
+  constructor(
+    public appConfigService: AppConfigService, public uiMessageService: UIMessageService,
+    private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private dialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher,
+    private notificationService: NotificationService, public appRuntimeInfoService: AppRuntimeInfoService) {
 
   // To avoid XSS attacks, the URL needs to be trusted from inside of your application.
     const avatarsSafeUrl = sanitizer.bypassSecurityTrustResourceUrl('./icon/assets/avatars.svg');
@@ -73,7 +75,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.notificationService.startNotificationQueue();
-    console.log(this.appConfigService.masterConfig);
   }
 
   onToggle(toggled: boolean) {

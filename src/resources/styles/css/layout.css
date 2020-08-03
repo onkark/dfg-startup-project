@@ -4,13 +4,14 @@ body {
 /*main layout -- START*/
 .site {
   display: flex;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   flex-direction: column;
 }
 
 .site-content {
   flex: 1;
   flex-direction: row;
+  min-height: 970px;
 }
 /*main layout -- END*/
 

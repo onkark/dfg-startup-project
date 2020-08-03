@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
-import { tap        } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
-import { AppRuntimeInfoService               } from './app-runtime-info.service';
-import { Section, SubSectionConfigPath       } from 'dfg-dynamic-form';
+import { AppRuntimeInfoService } from './app-runtime-info.service';
+import { Section, SubSectionConfigPath } from 'dfg-dynamic-form';
 import * as config$ from '../../sample-config/section-config/master-app.config';
 import { AppInitService } from './app-init.service';
 
@@ -17,15 +17,15 @@ export class AppConfigService {
     private serverTabSectionLoaded = false;
 
     private _masterConfig: Section[];
-    public get masterConfig(): Section[] {
-        return this._masterConfig;
-    }
+    // public get masterConfig(): Section[] {
+    //     return this._masterConfig;
+    // }
 
-    public set masterConfig(value: Section[]) {
-        this._masterConfig = value;
-    }
+    // public set masterConfig(value: Section[]) {
+    //     this._masterConfig = value;
+    // }
 
-    constructor(private httpClient: HttpClient, private  appRuntimeInfoService: AppRuntimeInfoService,
+    constructor(private httpClient: HttpClient, private appRuntimeInfoService: AppRuntimeInfoService,
         private appInitService: AppInitService) {
         this.setBaseSection();
     }
@@ -34,15 +34,34 @@ export class AppConfigService {
 
         if (this.appInitService.applicationSections) {
             this._masterConfig = [];
+
             for (const section of this.appInitService.applicationSections) {
                 let sectionConfig = JSON.parse(section['sectionConfig']);
                 if (typeof sectionConfig === 'string') {
                     sectionConfig = JSON.parse(sectionConfig);
                 }
+                section.isDeleted = section.isDeleted ? section.isDeleted : false;
                 this._masterConfig.push(new Section(sectionConfig));
             }
             this.serverSectionLoaded = true;
+
+            console.log(this._masterConfig);
+
+
+
+            // this._masterConfig = this._masterConfig.sort(
+            //     (a, b) => {
+            //         return (a.sectionOrder ? Number(a.sectionOrder) : 99) - (b.sectionOrder ? Number(b.sectionOrder) : 99);
+            //     });
+            this._masterConfig = this._masterConfig.sort(
+                (a: Section, b: Section) => {
+                    return a.sectionOrder - b.sectionOrder; // (a.sectionOrder ? Number(a.sectionOrder) : 999) - (b.sectionOrder ? Number(b.sectionOrder) : 999);
+                });
+
+
+            console.log(this._masterConfig);
             this.appRuntimeInfoService.masterConfig = this._masterConfig;
+
         } else {
             throw new Error('DFG-005: Server configuration not loaded');
         }
@@ -107,7 +126,7 @@ export class AppConfigService {
         if (this.serverSectionLoaded) {
             this.appRuntimeInfoService.setSection(sectionName);
             this.appRuntimeInfoService.setSubSection(subSectionName);
-            return this.masterConfig;
+            return this._masterConfig;
         } else {
             throw new Error('DFG-005: Server configuration not loaded');
         }
@@ -119,7 +138,7 @@ export class AppConfigService {
             // console.log('Loading saved getAppSections');
             this.appRuntimeInfoService.setSection(sectionName);
             this.appRuntimeInfoService.setSubSection(subSectionName);
-            return this.masterConfig;
+            return this._masterConfig;
         } else {
             throw new Error('DFG-005: Server configuration not loaded');
         }

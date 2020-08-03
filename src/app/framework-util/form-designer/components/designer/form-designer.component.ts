@@ -1,15 +1,15 @@
 import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Route, Router, ActivatedRoute, ParamMap        } from '@angular/router';
+import { Route, Router, ActivatedRoute, ParamMap } from '@angular/router';
 
-import { UIMessageService         } from '../../../../app-communication/service/ui-message.service';
-import { AppRuntimeInfoService    } from '../../../../app-communication/service/app-runtime-info.service';
-import { AsideService             } from '../../../../shared/aside/aside.service';
-import { FormDesignerService      } from '../../service/form-designer.service';
+import { UIMessageService } from '../../../../app-communication/service/ui-message.service';
+import { AppRuntimeInfoService } from '../../../../app-communication/service/app-runtime-info.service';
+import { AsideService } from '../../../../shared/aside/aside.service';
+import { FormDesignerService } from '../../service/form-designer.service';
 
-import { FormEditorControl, ApplicationForm        } from 'dfg-dynamic-form';
-import { FormRow, FormDesigner    } from 'dfg-dynamic-form';
-import { AppFormBase              } from 'dfg-dynamic-form';
-import { FormDesignerAsideConfig  } from 'dfg-dynamic-form';
+import { FormEditorControl, ApplicationForm } from 'dfg-dynamic-form';
+import { FormRow, FormDesigner } from 'dfg-dynamic-form';
+import { AppFormBase } from 'dfg-dynamic-form';
+import { FormDesignerAsideConfig } from 'dfg-dynamic-form';
 
 
 
@@ -32,8 +32,8 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
   selectedFormControl: FormEditorControl;
 
   constructor(private uiMessageService: UIMessageService, private asideService: AsideService,
-              private formDesignerService: FormDesignerService, private appRuntimeInfoService: AppRuntimeInfoService,
-              private route: ActivatedRoute) {
+    private formDesignerService: FormDesignerService, private appRuntimeInfoService: AppRuntimeInfoService,
+    private route: ActivatedRoute) {
 
     // Expand Aside card when designer loaded
     this.uiMessageService.expandedAsideCard = true;
@@ -52,13 +52,13 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
 
   initializeRoute() {
     this.route.paramMap
-      .subscribe ((params: ParamMap) => {
+      .subscribe((params: ParamMap) => {
         if (params.get('id')) {
           this.loadData(+params.get('id'));
-          } else {
-            this.addNewForm();
-          }
-    });
+        } else {
+          this.addNewForm();
+        }
+      });
   }
 
 
@@ -76,9 +76,9 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
 
   saveFormConfig() {
     if (this.formDesigner) {
-        this.processFormConfig();
-        this.formDesigner.formConfig = this.formConfig;
-        this.formDesignerService.saveFormConfig(this.formDesigner);
+      this.processFormConfig();
+      this.formDesigner.formConfig = this.formConfig;
+      this.formDesignerService.saveFormConfig(this.formDesigner);
     }
   }
 
@@ -89,6 +89,9 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
     console.log(this.updateFormConfig);
   }
 
+  loadRawConfig() {
+    this.formConfig = JSON.parse(this.updateFormConfig);
+  }
 
   onFormItemSelect(formControl: FormEditorControl) {
 
@@ -124,7 +127,7 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
 
     this.formConfig.push(newFormRow);
     if (rowIndex !== void 0) {
-      this.moveItem(this.formConfig, (this.formConfig.length - 1) , rowIndex);
+      this.moveItem(this.formConfig, (this.formConfig.length - 1), rowIndex);
     }
   }
 
@@ -178,16 +181,16 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
   moveItem(array: any[], oldIndex: number, newIndex: number): any[] {
 
     while (oldIndex < 0) {
-        oldIndex += array.length;
+      oldIndex += array.length;
     }
     while (newIndex < 0) {
-        newIndex += array.length;
+      newIndex += array.length;
     }
     if (newIndex >= array.length) {
-        let k = newIndex - array.length;
-        while ((k--) + 1) {
-            array.push(undefined);
-        }
+      let k = newIndex - array.length;
+      while ((k--) + 1) {
+        array.push(undefined);
+      }
     }
     array.splice(newIndex, 0, array.splice(oldIndex, 1)[0]);
     return array;
@@ -232,7 +235,7 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
     // }
   }
 
-  processExpansionPanelConfig()  {
+  processExpansionPanelConfig() {
 
     let tempRows: FormRow[] = [];
     let rowIndex = 0;
@@ -271,7 +274,7 @@ export class FormDesignerComponent implements OnInit, OnDestroy, AppFormBase {
         });
         formConfigTemp.push(newFormRow);
 
-        this.moveItem(formConfigTemp, (formConfigTemp.length - 1) , trackStartExpansionPanel);
+        this.moveItem(formConfigTemp, (formConfigTemp.length - 1), trackStartExpansionPanel);
 
         trackStartExpansionPanel = null;
         trackEndExpansionPanel = null;

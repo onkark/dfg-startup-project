@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-import { AppRuntimeInfoService  } from '../../app-communication/service/app-runtime-info.service';
-import { FormSaveLoadService    } from '../../app-communication/service/form-save-load.service';
-import { EventPipelineService, DynamicFormEvent, DynamicFormService   } from 'dfg-dynamic-form';
+import { AppRuntimeInfoService } from '../../app-communication/service/app-runtime-info.service';
+import { FormSaveLoadService } from '../../app-communication/service/form-save-load.service';
+import { EventPipelineService, DynamicFormEvent, DynamicFormService } from 'dfg-dynamic-form';
 
 import { Section, EnumFormConfigSource, EnumSectionType } from 'dfg-dynamic-form';
-import { FormRow                } from 'dfg-dynamic-form';
-import { ActionConfig           } from 'dfg-dynamic-form';
+import { FormRow } from 'dfg-dynamic-form';
+import { ActionConfig } from 'dfg-dynamic-form';
 
 import { Subscription } from 'rxjs';
 import { ApplicationForm } from 'dfg-dynamic-form';
@@ -28,10 +28,10 @@ export class AppSectionRenderComponent implements OnInit, OnDestroy {
 
     private dynamicFormEventSubscription: Subscription;
 
-    constructor(private route: ActivatedRoute, private router: Router, private  appRuntimeInfoService: AppRuntimeInfoService,
-                private formSaveLoadService: FormSaveLoadService, private eventPipelineService: EventPipelineService,
-                private dynamicFormService: DynamicFormService,
-                protected changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private route: ActivatedRoute, private router: Router, private appRuntimeInfoService: AppRuntimeInfoService,
+        private formSaveLoadService: FormSaveLoadService, private eventPipelineService: EventPipelineService,
+        private dynamicFormService: DynamicFormService,
+        protected changeDetectorRef: ChangeDetectorRef) { }
 
     ngOnInit() {
         // subscribe to the parameters observable
@@ -50,7 +50,7 @@ export class AppSectionRenderComponent implements OnInit, OnDestroy {
         });
 
 
-        this. dynamicFormEventSubscription = this.eventPipelineService.dynamicFormEvent$.subscribe((event: DynamicFormEvent) => {
+        this.dynamicFormEventSubscription = this.eventPipelineService.dynamicFormEvent$.subscribe((event: DynamicFormEvent) => {
             this.handleFormEvents(event);
         });
     }
@@ -86,9 +86,9 @@ export class AppSectionRenderComponent implements OnInit, OnDestroy {
 
     loadFormConfig(section: Section) {
         if (section) {
-            if (section.formConfigSource ===  EnumFormConfigSource.LOCAL) {
+            if (section.formConfigSource === EnumFormConfigSource.LOCAL) {
                 this.formConfig = section.formConfigData;
-            } else if (section.formConfigSource ===  EnumFormConfigSource.SERVER) {
+            } else if (section.formConfigSource === EnumFormConfigSource.SERVER) {
 
                 // Read new form config from DB eveytime
                 this.appRuntimeInfoService.loadFormConfig(section.formConfigPath).subscribe((response: ApplicationForm) => {
@@ -135,7 +135,7 @@ export class AppSectionRenderComponent implements OnInit, OnDestroy {
         if (cancelConfig.actionRedirect) {
 
             let redirectUrl = cancelConfig.actionRedirect.replace('#', '') +
-                            this.formData[cancelConfig.actionRedirectParameterKey] ?  '/' + this.formData[cancelConfig.actionRedirectParameterKey] : '';
+                this.formData[cancelConfig.actionRedirectParameterKey] ? '/' + this.formData[cancelConfig.actionRedirectParameterKey] : '';
 
             this.router.navigateByUrl(redirectUrl);
         }
@@ -146,15 +146,18 @@ export class AppSectionRenderComponent implements OnInit, OnDestroy {
         console.log(event, this.dynamicFormService);
 
         if (event.eventName && event.eventActionConfig) {
-              this.formSaveLoadService.handelFormEventActionConfig(event, false)
-              .subscribe((response: any) => {
-                if (event.eventActionConfig.actionResultBindModelKey) {
-                    this.copyDataInArray(response, this.formData[event.eventActionConfig.actionResultBindModelKey]);
-                    let dataRefreshEvent = new DynamicFormEvent();
-                    dataRefreshEvent.eventType = DynamicEventTypes.DATA_REFRESH;
-                    this.eventPipelineService.raseDataTableEvent(dataRefreshEvent);
-                }
-              });
+            this.formSaveLoadService.handelFormEventActionConfig(event, false)
+                .subscribe((response: any) => {
+                    if (event.eventActionConfig.actionResultBindModelKey) {
+                        this.copyDataInArray(response, this.formData[event.eventActionConfig.actionResultBindModelKey]);
+                        let dataRefreshEvent = new DynamicFormEvent();
+                        dataRefreshEvent.eventType = DynamicEventTypes.DATA_REFRESH;
+                        this.eventPipelineService.raseDataTableEvent(dataRefreshEvent);
+                    }
+                    if (event.eventActionConfig.actionRedirect) {
+                        this.router.navigateByUrl(event.eventActionConfig.actionRedirect);
+                    }
+                });
         }
     }
 

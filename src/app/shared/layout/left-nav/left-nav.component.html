@@ -1,5 +1,5 @@
-<ng-container *ngFor="let menuItem of appConfigService.masterConfig | filter: 'false':'isDeleted' | filter: 'true': 'isVisible'; let index=index">
-  <nav [class.selected]="isSelected(menuItem)">  
+<ng-container *ngFor="let menuItem of this.appRuntimeInfoService.masterConfig | filter: 'false':'isDeleted' | filter: 'true': 'isVisible'; let index=index">
+  <nav [class.selected]="isSelected(menuItem)" *ngIf="!menuItem.isDeleted">  
    
       <a mat-button [href]="menuItem.sectionLink ? menuItem.sectionLink : null" (click)="onToggelNavMenu(menuItem)" *ngIf="menuItem.formConfigSource !== 'remote-link'">
           <mat-icon *ngIf="menuItem.cssIconClass" fontSet="fa" [fontIcon]="menuItem.cssIconClass" st></mat-icon> 

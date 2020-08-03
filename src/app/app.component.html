@@ -7,7 +7,7 @@
         <app-toolbar></app-toolbar>
     </div> -->
     <mat-drawer-container class="site-content">
-        <mat-drawer class="site-navbar-drawer" #sidenav [opened]="!!this.appConfigService.masterConfig" [mode]="mobileQuery.matches ? 'over' : 'side'">
+        <mat-drawer class="site-navbar-drawer" #sidenav [opened]="!!this.appRuntimeInfoService.masterConfig" [mode]="mobileQuery.matches ? 'over' : 'side'">
             <nav class="site-navbar" fxFlex="1 6">
                 <app-left-nav></app-left-nav>
             </nav>
@@ -41,7 +41,7 @@
             </article>
         </mat-drawer-content>
     </mat-drawer-container>
-    <footer color="primary">
+    <footer class="primary-bg">
         <app-footer></app-footer>
     </footer>
 </body>

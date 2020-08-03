@@ -22,8 +22,8 @@ export class FooterComponent implements OnInit {
 
   toggleMode() {
     if (this.mode === 'DEV') {
-      this.appRuntimeInfoService.toggleDesignerMode();
       this.appRuntimeInfoService.IsProdMode = !this.appRuntimeInfoService.IsProdMode;
+      this.appRuntimeInfoService.toggleDesignerMode();
     }
   }
 }
